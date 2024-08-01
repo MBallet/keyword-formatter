@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from io import BytesIO
+import xlsxwriter
 
 # Function to color code the Excel file
 def color_code_excel(writer, df):
@@ -38,21 +39,4 @@ if uploaded_file is not None:
     
     trend_data = df['Trend'].str.split(',', expand=True).astype(float)
     df['Three Month Difference'] = trend_data.iloc[:, -1] - trend_data.iloc[:, -4]
-    df['YoY Change'] = trend_data.iloc[:, -1] - trend_data.iloc[:, 0]
-    
-    df['Current Rank'] = np.nan
-    df['Category'] = ''
-    
-    # Convert dataframe to Excel with color coding
-    output = BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-        df.to_excel(writer, index=False, sheet_name='Sheet1')
-        color_code_excel(writer, df)
-    
-    # Create a download button for the Excel file
-    st.download_button(
-        label="Download formatted data as Excel",
-        data=output.getvalue(),
-        file_name='formatted_data.xlsx',
-        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    )
+    df['YoY Change'] = trend_data.iloc[:, -1] - trend
